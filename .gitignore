@@ -1,0 +1,14 @@
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.venv/
+venv/
+env/
+.idea/
+
+# Linux Mint specific files
+*~
+*.log
+.env
+*.env
