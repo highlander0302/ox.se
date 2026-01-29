@@ -4,11 +4,9 @@ from pathlib import Path
 
 import genanki
 
-# ================= USER CONFIG =================
-FILENAME = "oxford_500_en_sv.apkg"  # output file name (REQUIRED)
-DECK_NAME = "Oxford 500 – English → Swedish"  # Anki deck name (REQUIRED)
-INPUT_CSV = "../oxford500.csv"
-# ==============================================
+INPUT_CSV = "../csv/test_data.csv"
+FILE_NAME = "../decks/test_deck.apkg"
+DECK_NAME = "TestDeck"
 
 
 class AnkiDeckBuilder:
@@ -23,7 +21,6 @@ class AnkiDeckBuilder:
     def __init__(self, input_csv: str | Path):
         self.input_csv = Path(input_csv)
 
-        # Random IDs per run (simple & collision-safe)
         self.model_id = self._random_id()
         self.deck_id = self._random_id()
 
@@ -43,7 +40,7 @@ class AnkiDeckBuilder:
         return len(pairs)
 
     def export(self) -> Path:
-        output_path = Path(FILENAME)
+        output_path = Path(FILE_NAME)
         genanki.Package(self.deck).write_to_file(output_path)
         return output_path
 
@@ -109,8 +106,8 @@ class AnkiDeckBuilder:
 
 
 def main() -> None:
-    if not FILENAME or not DECK_NAME:
-        raise ValueError("FILENAME and DECK_NAME must be set explicitly")
+    if not FILE_NAME or not DECK_NAME:
+        raise ValueError("FILE_NAME and DECK_NAME must be set explicitly")
 
     builder = AnkiDeckBuilder(input_csv=INPUT_CSV)
     count = builder.build_from_csv()
