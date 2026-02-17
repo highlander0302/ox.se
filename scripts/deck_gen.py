@@ -1,12 +1,13 @@
 import csv
+import random
 import uuid
 from pathlib import Path
 
 import genanki
 
-INPUT_CSV = "../csv/academic100.csv"
-FILE_NAME = "../decks/academic100.apkg"
-DECK_NAME = "Academic100"
+INPUT_CSV = "../csv/academic650.csv"
+FILE_NAME = "../decks/academic650.apkg"
+DECK_NAME = "Academic650"
 
 
 class AnkiDeckBuilder:
@@ -27,12 +28,12 @@ class AnkiDeckBuilder:
         self.model = self._build_model()
         self.deck = genanki.Deck(self.deck_id, DECK_NAME)
 
-    # ---------- public API ----------
-
     def build_from_csv(self) -> int:
         pairs = self._load_pairs()
         if not pairs:
             raise ValueError("No valid (word, translation) pairs found in CSV")
+
+        random.shuffle(pairs)
 
         for word, translation in pairs:
             self._add_note(word, translation)
@@ -43,8 +44,6 @@ class AnkiDeckBuilder:
         output_path = Path(FILE_NAME)
         genanki.Package(self.deck).write_to_file(output_path)
         return output_path
-
-    # ---------- internals ----------
 
     def _build_model(self) -> genanki.Model:
         return genanki.Model(
@@ -57,10 +56,30 @@ class AnkiDeckBuilder:
             templates=[
                 {
                     "name": "Card 1",
-                    "qfmt": "{{Word}}",
-                    "afmt": '{{FrontSide}}<hr id="answer">{{Translation}}',
+                    "qfmt": '<div class="word">{{Word}}</div>',
+                    "afmt": """
+                        <div class="word">{{Word}}</div>
+                        <hr id="answer">
+                        <div class="translation">{{Translation}}</div>
+                    """,
                 }
             ],
+            css="""
+            .card {
+                font-family: Arial;
+            }
+
+            .word {
+                text-align: center;
+                font-size: 40px;
+                font-weight: bold;
+            }
+
+            .translation {
+                text-align: center;
+                font-size: 28px;
+            }
+            """,
         )
 
     def _add_note(self, word: str, translation: str) -> None:
