@@ -4,9 +4,9 @@ from pathlib import Path
 
 import genanki
 
-INPUT_CSV = "../csv/training.csv"
-FILE_NAME = "../decks/training.apkg"
-DECK_NAME = "TrainingAlone"
+INPUT_CSV = "../csv/academic100.csv"
+FILE_NAME = "../decks/academic100.apkg"
+DECK_NAME = "Academic100"
 
 
 class AnkiDeckBuilder:
